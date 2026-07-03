@@ -56,6 +56,22 @@ int salaryCalculation(Rabotyaga rabotyaga)
     return salary;
 }
 
+int salaryCalculationForPeriod(Rabotyaga rabotyaga,int startYear,int startMonth, int endYear, int endMonth)
+{
+    int sumSalary = 0;
+    for (size_t i = 0; i < counter; i++)
+    {
+        if (strcmp(rabotyagaList[i].tabelNumber, rabotyaga.tabelNumber) == 0)
+        {
+            if (rabotyagaList[i].year>startYear&& rabotyagaList[i].year < endYear)
+            {
+                sumSalary += salaryCalculation(rabotyagaList[i]);
+            }
+        }
+    }
+    return sumSalary;
+}
+
 void AddToWorkerList(Rabotyaga& rabotyaga)
 {
     rabotyagaList[counter] = rabotyaga;
@@ -90,8 +106,10 @@ void RemoveFromWorkerList(Rabotyaga& rabotyaga)
 
 int main()
 {
-    Rabotyaga ivan("ivan"," "," ","1",1,1,1);
+    Rabotyaga ivan("ivan1","ivanov","trampovich","1",2024,3,100);
     AddToWorkerList(ivan);
+    Rabotyaga ivan2("ivan2", "ivanov", "trampovich", "1", 2025, 3, 120);
+    AddToWorkerList(ivan2);
     Rabotyaga snya("snya", " ", " ", "2", 1, 1, 1);
     AddToWorkerList(snya);
     Rabotyaga MishaXui("MishaXui", " ", " ", "3", 1, 1, 1);
@@ -103,7 +121,7 @@ int main()
     {
         std::cout << rabotyagaList[i].name << " \n";
     }
-    return salaryCalculation(ivan);
+    return salaryCalculationForPeriod(ivan,2020,1,2030,1);
 }
 
 
