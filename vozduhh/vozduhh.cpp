@@ -1,15 +1,35 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string.h>
+
 const int nameLeangth = 30;
 const int tabelNumberLeangth = 30;
 const double tax = 0.12;
 const int payPerHour = 100;
+const int workerListSize = 30;
+int counter = 0;
+
 
 struct Rabotyaga
 {
     char name[nameLeangth],secondNamne[nameLeangth],fatherName[nameLeangth],tabelNumber[tabelNumberLeangth];
     int year, month,workHours, overtimeWorkHours = 0;
+
+    inline Rabotyaga() : year(0), month(0), workHours(0), overtimeWorkHours(0) 
+    {
+        name[0] = '\0';
+        secondNamne[0] = '\0';
+        fatherName[0] = '\0';
+        tabelNumber[0] = '\0';
+    }
+
+    inline Rabotyaga(const char* _name) : year(0), month(0), workHours(0), overtimeWorkHours(0)
+    {
+        strncpy(name, _name, nameLeangth);
+        secondNamne[0] = '\0';
+        fatherName[0] = '\0';
+        tabelNumber[0] = '\0';
+    }
 
     inline Rabotyaga(const char* _name, const char* _secondName, const char* _fatherName, const char* _tabelNumber,int _year,int _month,int _workHours) :year(_year),month(_month),workHours(_workHours)
     {
@@ -26,6 +46,8 @@ struct Rabotyaga
     } 
 };
 
+Rabotyaga* rabotyagaList = new Rabotyaga[workerListSize];
+
 int salaryCalculation(Rabotyaga rabotyaga)
 {
     int salary = 0;
@@ -34,10 +56,53 @@ int salaryCalculation(Rabotyaga rabotyaga)
     return salary;
 }
 
+void AddToWorkerList(Rabotyaga& rabotyaga)
+{
+    rabotyagaList[counter] = rabotyaga;
+    counter++;
+}
+
+void RemoveFromWorkerList(Rabotyaga& rabotyaga)
+{
+    int indexToRemove = -1;
+
+    for (int i = 0; i < counter; i++)
+    {
+        if (strcmp(rabotyagaList[i].tabelNumber, rabotyaga.tabelNumber) == 0)
+        {
+            indexToRemove = i;
+            break; 
+        }
+    }
+
+    if (indexToRemove == -1) 
+    {
+        return;
+    }
+
+    for (int i = indexToRemove; i < counter - 1; i++) 
+    {
+        rabotyagaList[i] = rabotyagaList[i + 1];
+    }
+
+    counter--;
+}
+
 int main()
 {
-    Rabotyaga ivan("123", "123", "123", "123", 1, 1, 156);
-    
+    Rabotyaga ivan("ivan"," "," ","1",1,1,1);
+    AddToWorkerList(ivan);
+    Rabotyaga snya("snya", " ", " ", "2", 1, 1, 1);
+    AddToWorkerList(snya);
+    Rabotyaga MishaXui("MishaXui", " ", " ", "3", 1, 1, 1);
+    AddToWorkerList(MishaXui);
+
+    RemoveFromWorkerList(MishaXui);
+   
+    for (size_t i = 0; i < counter; i++)
+    {
+        std::cout << rabotyagaList[i].name << " \n";
+    }
     return salaryCalculation(ivan);
 }
 
