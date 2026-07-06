@@ -58,18 +58,18 @@ int salaryCalculation(Rabotyaga rabotyaga)
 
 int salaryCalculationForPeriod(Rabotyaga rabotyaga,int startYear,int startMonth, int endYear, int endMonth)
 {
-    int sumSalary = 0;
+    int SumSalary = 0;
     for (size_t i = 0; i < counter; i++)
     {
         if (strcmp(rabotyagaList[i].tabelNumber, rabotyaga.tabelNumber) == 0)
         {
             if (rabotyagaList[i].year>startYear&& rabotyagaList[i].year < endYear)
             {
-                sumSalary += salaryCalculation(rabotyagaList[i]);
+                SumSalary += salaryCalculation(rabotyagaList[i]);
             }
         }
     }
-    return sumSalary;
+    return SumSalary;
 }
 
 void AddToWorkerList(Rabotyaga& rabotyaga)
