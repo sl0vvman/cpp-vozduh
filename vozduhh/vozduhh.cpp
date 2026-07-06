@@ -7,7 +7,7 @@ const int tabelNumberLeangth = 30;
 const double tax = 0.12;
 const int payPerHour = 100;
 const int workerListSize = 30;
-int counter = 0;
+int counter = 1;
 
 
 struct Rabotyaga
