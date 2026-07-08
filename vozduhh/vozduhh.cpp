@@ -295,3 +295,4 @@ int main()
     delete[] rabotyagaList;
     return 0;
 }
+zhopa;
