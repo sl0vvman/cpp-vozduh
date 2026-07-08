@@ -12,7 +12,7 @@ const int payPerHour = 100;
 const int workerListSize = 30;
 int counter = 0;
 
-struct Rabotyaga         // Структура, её поля и конструкторы. 
+struct Rabotyaga
 {
     char name[nameLength];
     char secondName[nameLength];
@@ -52,38 +52,37 @@ struct Rabotyaga         // Структура, её поля и констру�
     }
 };
 
-Rabotyaga* rabotyagaList = new Rabotyaga[workerListSize];           // Инициализация массива структур.
+Rabotyaga* rabotyagaList = new Rabotyaga[workerListSize];
 
-int salaryCalculation(const Rabotyaga& rabotyaga)      // Функция расчёта зар. платы за месяц, с учётом сверхурочных.
+int salaryCalculation(const Rabotyaga& rabotyaga)
 {
     return ((rabotyaga.workHours * payPerHour) + (rabotyaga.overtimeWorkHours * 2 * payPerHour)) * (1.00 - tax);
 }
-int dataCheck(int startYear, int startMonth, int endYear, int endMonth,int currYear,int currMonth)    // Функция проверки совпадения периода с нужным диапазоном.
+
+int dataCheck(int startYear, int startMonth, int endYear, int endMonth, int currYear, int currMonth)
 {
-    if (currYear >= startYear && currYear <= endYear)
+    if (currYear > startYear && currYear < endYear)
     {
-        if (currYear == startYear)
+        return 1;
+    }
+    else if (currYear == startYear)
+    {
+        if (currMonth >= startMonth)
         {
-            if (currMonth>startMonth)
-            {
-                return 1;
-            }
+            return 1;
         }
-        else if (currYear == endYear)
-        {
-            if (currMonth<endMonth)
-            {
-                return 1;
-            }
-        }
-        else
+    }
+    else if (currYear == endYear)
+    {
+        if (currMonth <= endMonth)
         {
             return 1;
         }
     }
     return 0;
 }
-int salaryCalculationForPeriod(const char* _tabelnumber, int startYear, int startMonth, int endYear, int endMonth)     // Функция расчёта зар. платы за определенный период.
+
+int salaryCalculationForPeriod(const char* _tabelnumber, int startYear, int startMonth, int endYear, int endMonth)
 {
     int SumSalary = 0;
     for (int i = 0; i < counter; i++)
@@ -99,7 +98,7 @@ int salaryCalculationForPeriod(const char* _tabelnumber, int startYear, int star
     return SumSalary;
 }
 
-void AddToWorkerList(Rabotyaga& rabotyaga)            // Добавление сотрудника в массив.
+void AddToWorkerList(Rabotyaga& rabotyaga)
 {
     if (counter < workerListSize)
     {
@@ -108,7 +107,7 @@ void AddToWorkerList(Rabotyaga& rabotyaga)            // Добавление с
     }
 }
 
-void RemoveFromWorkerList(const char* _tabelnumber)        // Удаление сотрудника из массива.
+void RemoveFromWorkerList(const char* _tabelnumber)
 {
     int indexToRemove = -1;
     for (int i = 0; i < counter; i++)
@@ -129,9 +128,9 @@ void RemoveFromWorkerList(const char* _tabelnumber)        // Удаление �
     counter--;
 }
 
-void printList()                      // Вывод всех сотрудников.
+void printList()
 {
-    for (size_t i = 0; i < counter; i++)
+    for (int i = 0; i < counter; i++)
     {
         std::cout << "Сотрудник №" << i + 1 << std::endl;
         std::cout << "Имя: " << rabotyagaList[i].name << std::endl;
@@ -144,16 +143,17 @@ void printList()                      // Вывод всех сотрудник�
         if (rabotyagaList[i].overtimeWorkHours != 0) {
             std::cout << "Имеет сверхурочные" << std::endl;
         }
-        std::cout << "\n\n\n\n";
+        std::cout << "\n";
     }
 }
-void saveToFile()     // Сохранение всей информации в файл.
+
+void saveToFile()
 {
     FILE* f;
     errno_t err = fopen_s(&f, "workers.dat", "wb");
     if (err != 0)
     {
-        std::cout << "anlak" << std::endl;
+        std::cout << "Ошибка открытия файла для записи!" << std::endl;
         return;
     }
 
@@ -168,9 +168,8 @@ void saveToFile()     // Сохранение всей информации в �
     std::cout << "Данные сохранены в файл workers.dat" << std::endl;
 }
 
-void loadFromFile()            // Загрузка из файла.
+void loadFromFile()
 {
-
     FILE* f;
     errno_t err = fopen_s(&f, "workers.dat", "rb");
     if (err != 0)
@@ -190,24 +189,22 @@ void loadFromFile()            // Загрузка из файла.
     std::cout << "Данные загружены из файла workers.dat" << std::endl;
 }
 
-void secondNameSort()           // Сортировка вставками по фамилии.
-{ 
-    for (size_t i = 0; i < counter - 1; i++)
+void secondNameSort()
+{
+    for (int i = 0; i < counter - 1; i++)
     {
-        int indexMax = 0;
-        for (size_t j = 0; j < counter - 1; j++)
+        int minIdx = i;
+        for (int j = i + 1; j < counter; j++)
         {
-
-            if (strcmp(rabotyagaList[j].secondName, rabotyagaList[indexMax].secondName) == 1)
+            if (strcmp(rabotyagaList[j].secondName, rabotyagaList[minIdx].secondName) < 0)
             {
-                indexMax = j;
+                minIdx = j;
             }
         }
-        std::swap(rabotyagaList[i], rabotyagaList[indexMax]);
-
+        if (minIdx != i)
+            std::swap(rabotyagaList[i], rabotyagaList[minIdx]);
     }
 }
-
 
 int main()
 {
@@ -217,35 +214,38 @@ int main()
     loadFromFile();
 
     secondNameSort();
+
     bool flag = true;
     do {
         int ans;
-        std::cout << "1 - Добавить запись" << std::endl;
+        std::cout << "\n1 - Добавить запись" << std::endl;
         std::cout << "2 - Удалить запись" << std::endl;
         std::cout << "3 - Рассчитать зар. плату за период" << std::endl;
         std::cout << "4 - Вывести всех сотрудников (отсортированы по фамилиям)" << std::endl;
         std::cout << "5 - Выход" << std::endl;
+        std::cout << "Ваш выбор: ";
         std::cin >> ans;
+
         switch (ans) {
-        case 1: 
+        case 1:
         {
-            char _name[nameLength], _secondNamne[nameLength], _fatherName[nameLength], _tabelNumber[tabelNumberLength];
+            char _name[nameLength], _secondName[nameLength], _fatherName[nameLength], _tabelNumber[tabelNumberLength];
             int _year, _month, _workHours;
-            std::cout << "Введите фамилию сотрудника: " << std::endl;
-            std::cin >> _secondNamne;
-            std::cout << "Введите имя сотрудника: " << std::endl;
+            std::cout << "Введите фамилию сотрудника: ";
+            std::cin >> _secondName;
+            std::cout << "Введите имя сотрудника: ";
             std::cin >> _name;
-            std::cout << "Введите отчество сотрудника: " << std::endl;
+            std::cout << "Введите отчество сотрудника: ";
             std::cin >> _fatherName;
-            std::cout << "Введите табельный номер сотрудника: " << std::endl;
+            std::cout << "Введите табельный номер сотрудника: ";
             std::cin >> _tabelNumber;
-            std::cout << "Введите год: " << std::endl;
+            std::cout << "Введите год: ";
             std::cin >> _year;
-            std::cout << "Введите за который месяц: " << std::endl;
+            std::cout << "Введите месяц: ";
             std::cin >> _month;
-            std::cout << "Введите кол-во часов, проработанных сотрудником: " << std::endl;
+            std::cout << "Введите кол-во часов: ";
             std::cin >> _workHours;
-            Rabotyaga tmp(_name, _secondNamne, _fatherName, _tabelNumber, _year, _month, _workHours);
+            Rabotyaga tmp(_name, _secondName, _fatherName, _tabelNumber, _year, _month, _workHours);
             AddToWorkerList(tmp);
             secondNameSort();
             break;
@@ -253,40 +253,45 @@ int main()
         case 2:
         {
             char _tabelnumber[30];
-            std::cout << "Введите табельный номер сотрудника, которого хотите удалить: " << std::endl;
+            std::cout << "Введите табельный номер сотрудника для удаления: ";
             std::cin >> _tabelnumber;
             RemoveFromWorkerList(_tabelnumber);
             break;
-
         }
         case 3:
         {
             int _startYear, _startMonth, _endYear, _endMonth;
             char _tabelnumber[tabelNumberLength];
-            std::cout << "Введите табельный номер сотрудника: " << std::endl;
+            std::cout << "Введите табельный номер сотрудника: ";
             std::cin >> _tabelnumber;
-            std::cout << "Введите начальный год: " << std::endl;
+            std::cout << "Введите начальный год: ";
             std::cin >> _startYear;
-            std::cout << "Введите начальный месяц: " << std::endl;
+            std::cout << "Введите начальный месяц: ";
             std::cin >> _startMonth;
-            std::cout << "Введите конечный год: " << std::endl;
+            std::cout << "Введите конечный год: ";
             std::cin >> _endYear;
-            std::cout << "Введите конечный месяц: " << std::endl;
+            std::cout << "Введите конечный месяц: ";
             std::cin >> _endMonth;
-            salaryCalculationForPeriod(_tabelnumber, _startYear, _startMonth, _endYear, _endMonth);
+            int result = salaryCalculationForPeriod(_tabelnumber, _startYear, _startMonth, _endYear, _endMonth);
+            std::cout << "Зарплата за период: " << result << std::endl;
             break;
         }
-        case 4: {
+        case 4:
+        {
             printList();
             break;
         }
-        case 5: {
+        case 5:
+        {
             flag = false;
             break;
         }
-        default: std::cout << "Неправильный номер операции" << std::endl;
-       }
-
+        default:
+        {
+            std::cout << "Неправильный номер операции" << std::endl;
+            break;
+        }
+        }
     } while (flag);
 
     saveToFile();
