@@ -107,26 +107,21 @@ void AddToWorkerList(Rabotyaga& rabotyaga)
     }
 }
 
-void RemoveFromWorkerList(const char* _tabelnumber)
+void RemoveFromWorkerList(const char* _tabelnumber) 
 {
-    int indexToRemove = -1;
-    for (int i = 0; i < counter; i++)
+    int writeIndex = 0;
+
+    for (int readIndex = 0; readIndex < counter; readIndex++) 
     {
-        if (strcmp(rabotyagaList[i].tabelNumber, _tabelnumber) == 0)
+        if (strcmp(rabotyagaList[readIndex].tabelNumber, _tabelnumber) != 0) 
         {
-            indexToRemove = i;
-            break;
+            rabotyagaList[writeIndex] = rabotyagaList[readIndex];
+            writeIndex++;
         }
     }
-
-    if (indexToRemove == -1) return;
-
-    for (int i = indexToRemove; i < counter - 1; i++)
-    {
-        rabotyagaList[i] = rabotyagaList[i + 1];
-    }
-    counter--;
+    counter = writeIndex;
 }
+
 
 void printList()
 {
