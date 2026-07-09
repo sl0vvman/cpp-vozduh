@@ -305,8 +305,8 @@ int main()
         std::cout << "2 - Удалить запись" << std::endl;
         std::cout << "3 - Рассчитать зар. плату за период" << std::endl;
         std::cout << "4 - Вывести всех сотрудников (отсортированы по фамилиям)" << std::endl;
-        std::cout << "5 - Выход" << std::endl;
-        std::cout << "6 - Редактировать запись" << std::endl;
+        std::cout << "5 - Редактировать запись" << std::endl;
+        std::cout << "6 - Выход" << std::endl;
         std::cout << "Ваш выбор: ";
         std::cin >> ans;
 
@@ -367,16 +367,17 @@ int main()
         }
         case 5:
         {
-            flag = false;
-            break;
-        }
-        case 6:
-        {
             char _tabelnumber[30];
             std::cout << "Введите табельный номер сотрудника для редактирования: ";
             std::cin >> _tabelnumber;
             EditWorker(_tabelnumber);
             secondNameSort(); // пересортировка после изменения
+            break;
+        }
+        case 6:
+        {
+            
+            flag = false;
             break;
         }
         default:
