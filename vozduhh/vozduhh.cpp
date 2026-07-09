@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <windows.h>
 #include <algorithm>
-
 const int nameLength = 30;
 const int tabelNumberLength = 30;
 const double tax = 0.12;
